@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="init">
+    
+    <taskdef name="xmldiff" classname="com.kaikoda.acacia.XMLDiffTask">
+        <classpath>
+            <pathelement location="${basedir}/../lib/dist/commons-io/commons-io-2.4.jar" />
+            <pathelement location="${basedir}/../lib/dist/xerces/xercesImpl-2.11.0.jar" />
+            <pathelement location="${basedir}/../lib/dist/xmlunit/xmlunit-1.5.jar" />
+            <pathelement location="${basedir}/../lib/dist/xmldiff/xmldiff-0.1.jar" />
+        </classpath>
+    </taskdef>
+    
+    <target name="init">
+        
+        <antcall target="exact" />
+        <antcall target="different" />
+        <!-- antcall target="many-to-one" /-->
+                
+    </target>
+    
+    
+    <target name="exact">
+        
+        <property name="control.file" location="${basedir}/../assets/data/control/same.xml" />
+        <property name="test.file" location="${basedir}/../assets/data/test/same.xml" />
+        
+        <xmldiff property="total-differences" control="${control.file}" test="${test.file}" />
+        
+        <echo message="${total-differences}" />
+        
+    </target>
+    
+    <target name="different">
+        
+        <property name="control.file" location="${basedir}/../assets/data/control/different.xml" />
+        <property name="test.file" location="${basedir}/../assets/data/test/same.xml" />
+        
+        <xmldiff property="total-differences" control="${control.file}" test="${test.file}" />
+        
+        <echo message="${total-differences}" />
+        
+    </target>
+    
+    <target name="many-to-one">
+        
+        <property name="control.file" location="${basedir}/../assets/data/control/different.xml" />
+        <property name="test.dir" location="${basedir}/../assets/data/test/" />
+        
+        <xmldiff property="total-differences" control="${control.file}">
+            
+            <fileset dir="${test.dir}">
+                <include name="**/*.xml" />
+            </fileset>
+            
+        </xmldiff>
+        
+        <echo message="${total-differences}" />
+        
+    </target>
+    
+</project>

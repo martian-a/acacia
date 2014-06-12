@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="init">
+    
+    <target name="init">
+        
+        <property name="src.dir" location="${basedir}/../src" />
+        <property name="build.dir" location="${basedir}/../build" />
+        <property name="jar.version" value="0.1" />
+        <property name="jar.dir" location="${basedir}/../lib/dist/xmldiff" />
+        <property name="jar.name" value="xmldiff-${jar.version}.jar" />
+        
+        
+        <antcall target="compile" />
+        <antcall target="compress" />
+        <subant buildpath="." antfile="suite.xml" />                
+                
+    </target>
+    
+    <target name="compile">
+        
+        <javac srcdir="${src.dir}" destdir="${build.dir}">
+            <classpath>
+                <pathelement location="${basedir}/../lib/dist/xerces/xercesImpl-2.11.0.jar" />
+                <pathelement location="${basedir}/../lib/dist/xmlunit/xmlunit-1.5.jar" />
+                <pathelement location="${basedir}/../lib/dist/commons-io/commons-io-2.4.jar" />
+            </classpath>
+        </javac>
+        
+    </target>
+    
+    <target name="compress">
+        
+        <jar basedir="${build.dir}" destfile="${jar.dir}/${jar.name}" includes="**/XMLDiffTask.class" update="true" />
+        
+    </target>
+    
+</project>

@@ -1,3 +1,19 @@
+/*
+Copyright (C) 2014  Sheila Ellen Thomson
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the MIT License (MIT) as published by
+the Open Source Initiative.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MIT License for more details.
+
+You should have received a copy of the MIT License
+along with this program.  If not, see <http://opensource.org/licenses/MIT>
+*/
+
 package com.kaikoda.acacia;
 
 import java.io.File;
@@ -12,6 +28,7 @@ import org.apache.tools.ant.Task;
 import org.custommonkey.xmlunit.DetailedDiff;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.Difference;
+import org.custommonkey.xmlunit.exceptions.XMLUnitRuntimeException;
 import org.xml.sax.SAXException;
 
 public class XMLDiffTask extends Task {
@@ -36,8 +53,27 @@ public class XMLDiffTask extends Task {
 	}
 	
 	private void setDifferences() throws SAXException, IOException {
-		DetailedDiff diff = new DetailedDiff(new Diff(this.getXmlString(this.controlPath), this.getXmlString(this.testPath)));
-		this.differences = diff.getAllDifferences();
+		DetailedDiff detailedDiff = new DetailedDiff(new Diff(this.getXmlString(this.controlPath), this.getXmlString(this.testPath)));
+		this.differences = (List<Difference>) detailedDiff.getAllDifferences();
+	}
+	
+	public String getControlPath() {
+		return this.controlPath;
+	}
+	
+	public String getTestPath() {
+		return this.testPath;
+	}
+	
+	public String getPropertyName() {
+		return this.propertyName;
+	}
+	
+	public Integer getTotalDifferences() {
+		if (this.differences == null) {
+			return null;
+		} 
+		return this.differences.size();		
 	}
 	
     protected void validate() {
@@ -55,7 +91,7 @@ public class XMLDiffTask extends Task {
 			this.setDifferences();
 			this.project.setNewProperty(this.propertyName, Integer.toString(this.differences.size()));
 			if (this.differences.size() > 0) {				
-				System.out.println(this.differences.get(0).toString());
+				this.project.log(this.differences.get(0).toString(), Project.MSG_ERR);
 			}
 			
 		} catch (SAXException | IOException e) {
@@ -68,8 +104,6 @@ public class XMLDiffTask extends Task {
 	}
 	
 	private String getXmlString(String pathIn) throws IOException {
-		File xmlFile = new File(pathIn);
-		String xmlString = FileUtils.readFileToString(xmlFile, "utf-8");
-		return xmlString;
+		return FileUtils.readFileToString(new File(pathIn), "utf-8");
 	}
 }

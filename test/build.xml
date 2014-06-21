@@ -20,7 +20,7 @@ along with this program.  If not, see <http://opensource.org/licenses/MIT>
         
         <property name="src.dir" location="${basedir}/../src" />
         <property name="build.dir" location="${basedir}/../build" />
-        <property name="jar.version" value="0.1" />
+        <property name="jar.version" value="0.1-alpha" />
         <property name="jar.dir" location="${basedir}/../lib/dist/xmldiff" />
         <property name="jar.name" value="xmldiff-${jar.version}.jar" />
         

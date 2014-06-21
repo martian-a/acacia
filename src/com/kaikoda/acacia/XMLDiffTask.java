@@ -28,17 +28,16 @@ import org.apache.tools.ant.Task;
 import org.custommonkey.xmlunit.DetailedDiff;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.Difference;
-import org.custommonkey.xmlunit.exceptions.XMLUnitRuntimeException;
 import org.xml.sax.SAXException;
 
 public class XMLDiffTask extends Task {
 	
-	private String propertyName;
-	private String controlPath;
-	private String testPath;
-	private List<Difference> differences;
-	private Project project;  	
-	private Vector filesets = new Vector();
+	protected String propertyName;
+	protected String controlPath;
+	protected String testPath;
+	protected List<Difference> differences;
+	protected Project project;  	
+	protected Vector filesets = new Vector();
 	
 	public void setControl(String controlIn) {
 		this.controlPath = controlIn;
@@ -57,19 +56,7 @@ public class XMLDiffTask extends Task {
 		this.differences = (List<Difference>) detailedDiff.getAllDifferences();
 	}
 	
-	public String getControlPath() {
-		return this.controlPath;
-	}
-	
-	public String getTestPath() {
-		return this.testPath;
-	}
-	
-	public String getPropertyName() {
-		return this.propertyName;
-	}
-	
-	public Integer getTotalDifferences() {
+	protected Integer getTotalDifferences() {
 		if (this.differences == null) {
 			return null;
 		} 
@@ -96,10 +83,7 @@ public class XMLDiffTask extends Task {
 			
 		} catch (SAXException | IOException e) {
 			e.printStackTrace();
-		}			
-		
-		
-		
+		}				
 		
 	}
 	
